@@ -1,0 +1,42 @@
+.App{
+    padding: 6px;
+    background: darkcyan;
+}
+.Buttons{
+    text-align: center;
+}
+.Button{
+    border-radius: 25px;
+    width: 60px;
+    height: 40px;
+    display: inline-block;
+    background: salmon;
+    border: solid black 1px;
+    margin: 5px 6px;
+}
+.ButtonCenter{
+    border-radius: 25px;
+    width: 120px;
+    height: 40px;
+    display: inline-block;
+    background: coral;
+    border: solid black 1px;
+    margin: 5px 6px;
+}
+
+.ProgressBarContainer{
+    background: bisque;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.ProgressBar{
+    height: 20px;
+    width: 0%;
+    background: gray;
+}
+.Title{
+    text-align: center;
+    font-size: 25px;
+    padding: 10px;
+    background: whitesmoke;
+}

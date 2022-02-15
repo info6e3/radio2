@@ -1,0 +1,63 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.App{
+    padding: 10px;
+    width: 100vw;
+    height: 100vh;
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.DragSpace{
+    padding: 100px;
+    display: flex;
+    width: 76%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: rosybrown;
+}
+.Items{
+    flex-direction: column;
+    display: flex;
+    padding: 5px;
+    width: 22%;
+    height: 100%;
+    font-size: 30px;
+    background: darkcyan;
+}
+.FilesBox{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background: cornsilk;
+}
+.FilesTitle{
+    margin-bottom: 10px;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.drop-area{
+    width: 100%;
+    height: 100%;
+    border: 5px dashed black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drop-area-false{
+    width: 100%;
+    height: 100%;
+    border: 5px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
