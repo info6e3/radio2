@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import './styles/App.css';
+import ItemsTurnSend from "./components/ItemsTurnSend";
 
 
 function App() {
-  const [drag, setDrag] = useState(false);
+  const serverURL = "http://5.181.109.24:5000/music-download";
+  let [files, setFiles] = useState([]);
+  let [drag, setDrag] = useState(false);
 
   function dragStartHandler(e){
     e.preventDefault();
@@ -17,28 +20,9 @@ function App() {
 
   function onDropHandler(e){
     e.preventDefault();
-    let files = [...e.dataTransfer.files]
-    console.log(files);
-
-    files.forEach(file => {
-      let formData = new FormData();
-      formData.append('file', file);
-      SendPost("http://localhost:5000/music", formData);
-    });
+    setFiles([...e.dataTransfer.files]);
+    //console.log(files);
     setDrag(false);
-  }
-
-  function SendPost(_url, _data) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", _url);
-    xhr.onload = () => {
-      if (xhr.status == 200) {
-        console.log(xhr.responseText);
-      } else {
-        console.log("Server response: ", xhr.statusText);
-      }
-    };
-    xhr.send(_data);
   }
 
   return (
@@ -61,10 +45,8 @@ function App() {
 
       }
       </div>
-      <div className="Items">
-        <div className="FilesTitle">Файлы</div>
-        <div className="FilesBox"></div>
-      </div>
+
+      <ItemsTurnSend className="ItemsTurnSend" files={files} serverURL={serverURL}/>
     </div>
   );
 }

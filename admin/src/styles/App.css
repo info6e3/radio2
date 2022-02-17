@@ -22,27 +22,6 @@
     font-size: 40px;
     background: rosybrown;
 }
-.Items{
-    flex-direction: column;
-    display: flex;
-    padding: 5px;
-    width: 22%;
-    height: 100%;
-    font-size: 30px;
-    background: darkcyan;
-}
-.FilesBox{
-    display: flex;
-    height: 100%;
-    width: 100%;
-    background: cornsilk;
-}
-.FilesTitle{
-    margin-bottom: 10px;
-    text-align: center;
-    display: block;
-    width: 100%;
-}
 
 .drop-area{
     width: 100%;

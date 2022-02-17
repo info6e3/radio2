@@ -3,19 +3,23 @@ import './styles/App.css';
 import axios from "axios";
 
 function App() {
-    let listened = false;
+    let isMuted = false;
     let title;
-    let audio;
+    let audio = new Audio();
+    audio.volume = 0.1;
+    let serverURL = "http://5.181.109.24:5000/music-get";
 
     function PlayButton(){
-        GetAudio("http://localhost:5000/");
+        GetAudio(serverURL);
     }
 
     function PlayAudio(_url, _name, _currentTime){
-        audio = new Audio(_url);
-        audio.currentTime = _currentTime;
-        audio.volume = 0.1;
+        title = _name;
+        document.querySelector('.Title').innerHTML = title;
+        audio.src = _url;
         audio.addEventListener('timeupdate', updateProgress);
+        audio.currentTime = _currentTime;
+        audio.load();
         audio.play();
     }
 
@@ -34,26 +38,39 @@ function App() {
                 PlayAudio(file.url, file.name, currentTime);
 
             } else {
-                console.log("Server response: ", xhr.statusText);
+                document.querySelector('.Title').innerHTML = "-----";
+                console.log("Server response: ", xhr.responseText);
             }
         };
-
-        xhr.send(JSON.stringify({
-            query: 'getmusic'
-        }));
+        xhr.send();
     }
 
     function updateProgress(e){
         let {duration, currentTime} = e.srcElement;
         let progressPercent = currentTime/duration * 100;
-        if(duration === currentTime)
-        document.querySelector('.ProgressBar').style.width = `${progressPercent}%`;
+            document.querySelector('.ProgressBar').style.width = `${progressPercent}%`;
+        if(duration === currentTime){
+            audio.removeEventListener('timeupdate', updateProgress);
+            GetAudio(serverURL);
+        }
+    }
+
+    function MuteButton(){
+        if(isMuted){
+            document.querySelector('.ButtonMute').style.background = "limegreen";
+            audio.volume = 0.1;
+            isMuted = false;
+        }else {
+            document.querySelector('.ButtonMute').style.background = "crimson";
+            audio.volume = 0;
+            isMuted = true;
+        }
     }
 
     return (
         <div className="App">
             <div className="Title">
-                {title}
+                -----
             </div>
             <div className="ProgressBarContainer">
                 <div className="ProgressBar">
@@ -62,8 +79,10 @@ function App() {
             </div>
             <div className="Buttons">
 
-
+                <div className="ButtonMute" onClick={() => {MuteButton()}}>
+                </div>
                 <div className="ButtonCenter" onClick={() => {PlayButton()}}>
+
                 </div>
 
 

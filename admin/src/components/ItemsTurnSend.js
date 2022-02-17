@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
-import './styles/FilesBox.css';
+import './styles/ItemsTurnSend.css';
 
 
-function Items({className, files}) {
+function ItemsTurnSend({className, files, serverURL}) {
     let filesHTML = "";
-    addFiles(files);
+    if(files)
+        renderFiles(files);
 
-    function addFiles(_files)
+    function renderFiles(_files)
     {
         _files.forEach(file => {
             let fileItem = `<div 
@@ -19,15 +20,41 @@ function Items({className, files}) {
         });
     }
 
+    function SendPost(_url, _data) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", _url);
+        xhr.onload = () => {
+            if (xhr.status == 200) {
+                let response = JSON.parse(xhr.responseText);
+                //console.log(response);
+                if(response.message === 'In musicTurn') {
+                    let fileItem = document.getElementById(`${response.filename}`);
+                    fileItem.style.background = "green";
+                }
+            } else {
+                console.log("Server response: ", xhr.statusText);
+            }
+        };
+        xhr.send(_data);
+    }
+
+    function sendFiles(){
+        files.forEach(file => {
+            //отправка файла
+            let formData = new FormData();
+            formData.append('file', file);
+            SendPost(serverURL, formData);
+        });
+    }
+
     return (
-       
-        <div className="Items">
+        <div className={className}>
             <div className="FilesTitle">Файлы</div>
-            <div className={className} dangerouslySetInnerHTML={{__html: filesHTML}}></div>
-        <div className="SendButton" onClick={SendFiles}>Отправить</div>
+            <div className="FilesBox" dangerouslySetInnerHTML={{__html: filesHTML}}></div>
+            <div className="SendButton" onClick={sendFiles}>Отправить</div>
         </div>
     );
 }
 
-export default Items;
+export default ItemsTurnSend;
 
