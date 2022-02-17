@@ -7,19 +7,10 @@
 }
 .ButtonMute{
     border-radius: 25px;
-    width: 60px;
+    width: 100px;
     height: 40px;
     display: inline-block;
-    background: limegreen;
-    border: solid black 1px;
-    margin: 5px 6px;
-}
-.ButtonCenter{
-    border-radius: 25px;
-    width: 120px;
-    height: 40px;
-    display: inline-block;
-    background: coral;
+    background: crimson;
     border: solid black 1px;
     margin: 5px 6px;
 }

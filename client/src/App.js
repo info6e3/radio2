@@ -1,54 +1,73 @@
 import React from 'react';
 import './styles/App.css';
-import axios from "axios";
 
 function App() {
-    let isMuted = false;
-    let title;
-    let audio = new Audio();
-    audio.volume = 0.1;
     let serverURL = "http://5.181.109.24:5000/music-get";
+    //стартовые переменные
+    let startTimer;
+    let isStarted = false;
+    let currentStartTime;
+    let musicStartDuration;
 
-    function PlayButton(){
-        GetAudio(serverURL);
-    }
+    //Стандартные настройки данных
+    let audio = new Audio();
+    audio.muted = true;
+    audio.volume = 0.1;
+    audio.autoplay = true;
+    let isMuted = true;
+    //Получение аудио при запуске страницы
+    GetAudio(serverURL);
 
-    function PlayAudio(_url, _name, _currentTime){
-        title = _name;
-        document.querySelector('.Title').innerHTML = title;
+    function PlayAudio(_url, _title, _currentTime){
+        currentStartTime = _currentTime;
+        document.querySelector('.Title').innerHTML = _title;
+        document.title = _title;
         audio.src = _url;
-        audio.addEventListener('timeupdate', updateProgress);
-        audio.currentTime = _currentTime;
-        audio.load();
-        audio.play();
+        if(isStarted) {
+            audio.addEventListener('timeupdate', updateProgress);
+            audio.currentTime = _currentTime;
+        } else {
+            startTimer = setInterval(() => {
+                currentStartTime += 0.5;
+                let progressPercent = currentStartTime/musicStartDuration * 100;
+                document.querySelector('.ProgressBar').style.width = `${progressPercent}%`;
+                if(musicStartDuration <= currentStartTime) {
+                    clearInterval(startTimer);
+                    GetAudio(serverURL);
+                }
+            }, 500);
+        }
     }
 
-     function GetAudio(_url) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", _url);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-        xhr.onload = () => {
-            if (xhr.status == 200) {
-                let response = JSON.parse(xhr.responseText);
-                let file = response.file;
-                let currentTime = response.currentTime;
-                console.log(file);
-                console.log(currentTime);
-                PlayAudio(file.url, file.name, currentTime);
+    function GetAudio(_url) {
+         const xhr = new XMLHttpRequest();
+         xhr.open("POST", _url);
+         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+         console.log("Запрос отправлен");
+         xhr.send();
+         xhr.onload = () => {
+             if (xhr.status == 200) {
+                 let response = JSON.parse(xhr.responseText);
 
-            } else {
-                document.querySelector('.Title').innerHTML = "-----";
-                console.log("Server response: ", xhr.responseText);
-            }
-        };
-        xhr.send();
-    }
+                 musicStartDuration = response.file.duration;
+                 let file = response.file;
+                 let currentTime = response.currentTime;
+                 //console.log(file);
+                 //console.log(currentTime);
+                 PlayAudio(file.url, file.title, currentTime);
+             } else {
+                 document.querySelector('.Title').innerHTML = "Ошибка";
+                 console.log("Server response: ", xhr.responseText);
+             }
+         };
+     }
 
     function updateProgress(e){
         let {duration, currentTime} = e.srcElement;
         let progressPercent = currentTime/duration * 100;
-            document.querySelector('.ProgressBar').style.width = `${progressPercent}%`;
+        document.querySelector('.ProgressBar').style.width = `${progressPercent}%`;
+        //console.log(`${duration} / ${currentTime}`)
         if(duration === currentTime){
             audio.removeEventListener('timeupdate', updateProgress);
             GetAudio(serverURL);
@@ -56,14 +75,26 @@ function App() {
     }
 
     function MuteButton(){
-        if(isMuted){
+        if(isStarted){
+            if(isMuted){
+                document.querySelector('.ButtonMute').style.background = "limegreen";
+                audio.muted = false;
+                isMuted = false;
+            }else {
+                document.querySelector('.ButtonMute').style.background = "crimson";
+                audio.muted = true;
+                isMuted = true;
+            }
+        } else {
+            clearInterval(startTimer);
             document.querySelector('.ButtonMute').style.background = "limegreen";
-            audio.volume = 0.1;
+            isStarted = true;
             isMuted = false;
-        }else {
-            document.querySelector('.ButtonMute').style.background = "crimson";
-            audio.volume = 0;
-            isMuted = true;
+            audio.muted = false;
+            audio.play();
+            if(audio.src)
+                audio.currentTime = currentStartTime;
+            audio.addEventListener('timeupdate', updateProgress);
         }
     }
 
@@ -78,14 +109,8 @@ function App() {
                 </div>
             </div>
             <div className="Buttons">
-
                 <div className="ButtonMute" onClick={() => {MuteButton()}}>
                 </div>
-                <div className="ButtonCenter" onClick={() => {PlayButton()}}>
-
-                </div>
-
-
             </div>
         </div>
     );
