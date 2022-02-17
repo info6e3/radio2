@@ -2,6 +2,9 @@ const fileUpload = require('express-fileupload')
 const express = require('express')
 const fs = require('fs')
 const { getAudioDurationInSeconds } = require('get-audio-duration');
+const events = require('events');
+
+const emitter = new events.EventEmitter();
 
 const PORT = 5000;
 const serverAddress = 'http://5.181.109.24:5000';
@@ -19,6 +22,9 @@ app.use((req, res, next) => {
 let musicTurn = [];
 let currentTime = 0;
 let timer;
+
+
+
 
 /*
 app.get('/', (req,res) => {
@@ -39,7 +45,7 @@ app.post('/', (req, res) => {
 app.get('/music/*', (req,res) => {
     let _url = req.url;
     _url.replace('\\', '/');
-    res.sendfile(`.${req.url}`);
+    res.sendfile('.' + req.url);
 
 })
 
@@ -52,7 +58,12 @@ app.post('/music-get', (req, res) => {
                 currentTime: currentTime
             });
         } else {
-            return res.status(201).send('Музыки нет');
+            emitter.once('SendMusic', () => {
+                return res.status(200).send({
+                    file: musicTurn[0],
+                    currentTime: currentTime
+                });
+            });
         }
     } catch (e){
         console.log(e);
@@ -82,15 +93,21 @@ async function uploadFile(req, res) {
                 duration = _duration;
             });
 
+
+            let title = file.name.split('.');
+            title.pop();
+            title = title.join('.');
             let music = {
                 url: `${serverAddress}/music/${file.name}`,
                 name: file.name,
-                duration: duration
+                duration: duration,
+                title: title
             };
 
             //если нет музыки в плейлисте
             if(!musicTurn[0]) {
                 currentTime = 0;
+                clearInterval(timer);
                 timer = setInterval(() => {
                     currentTime++;
                     if(musicTurn[0]) {
@@ -100,18 +117,19 @@ async function uploadFile(req, res) {
                     }
                 }, 1000);
             }
-
             musicTurn.push(music);
+            emitter.emit('SendMusic');
 
             console.log(`Длительность ${duration}`);
             console.log(`Файл ${file.name} добавлен в очередь`);
+
             return res.status(200).send({
                 message: 'In musicTurn',
-                filename: file.name
+                filename: file.name,
             });
 
         } else {
-            return res.status(200).send('Это не mp3');
+            return res.status(200).send('Это не mp3/m4a');
         }
 
     } catch (e) {

@@ -11,8 +11,7 @@ function ItemsTurnSend({className, files, serverURL}) {
     {
         _files.forEach(file => {
             let fileItem = `<div 
-                        class="FileItem"
-                        draggable="true">
+                        class="FileItem">
                         <div class="FileStatusBar" id="${file.name}"></div>
                         <div class="FileName">${file.name}</div>
                      </div>`;
