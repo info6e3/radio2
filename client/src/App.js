@@ -1,7 +1,9 @@
 import React from 'react';
 import './styles/App.css';
 
+
 function App() {
+
     let serverURL = "http://5.181.109.24:5000/music-get";
     //стартовые переменные
     let startTimer;
@@ -49,12 +51,9 @@ function App() {
          xhr.onload = () => {
              if (xhr.status == 200) {
                  let response = JSON.parse(xhr.responseText);
-
                  musicStartDuration = response.file.duration;
                  let file = response.file;
                  let currentTime = response.currentTime;
-                 //console.log(file);
-                 //console.log(currentTime);
                  PlayAudio(file.url, file.title, currentTime);
              } else {
                  document.querySelector('.Title').innerHTML = "Ошибка";

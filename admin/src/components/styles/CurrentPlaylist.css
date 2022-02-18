@@ -1,0 +1,54 @@
+.Lists{
+    width: 100%;
+    display: inline-flex;
+    height: 100%;
+    justify-content: space-between;
+    background: darkgoldenrod;
+}
+.List{
+    border: 1px solid black;
+    flex-direction: column;
+    display: flex;
+    width: 50%;
+    height: 100%;
+    font-size: 30px;
+    background: darkcyan;
+}
+.ListTitle{
+    padding: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.ListBox{
+    overflow-y: auto;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background: red;
+    flex-direction: column;
+    padding: 10px;
+}
+.MusicItem{
+    font-size: 16px;
+    word-wrap: break-word;
+    padding: 5px;
+    flex-direction: column;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    background: lightgray;
+}
+.CurrentPlaylist{
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+    width: 40%;
+}
+.SendButton{
+    background:darkgoldenrod;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}

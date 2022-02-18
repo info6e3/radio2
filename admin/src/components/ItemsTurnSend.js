@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './styles/ItemsTurnSend.css';
 
 
-function ItemsTurnSend({className, files, serverURL}) {
+function ItemsTurnSend({files, serverURL}) {
     let filesHTML = "";
     if(files)
         renderFiles(files);
@@ -25,13 +25,14 @@ function ItemsTurnSend({className, files, serverURL}) {
         xhr.onload = () => {
             if (xhr.status == 200) {
                 let response = JSON.parse(xhr.responseText);
-                //console.log(response);
+                console.log(response);
                 if(response.message === 'In musicTurn') {
                     let fileItem = document.getElementById(`${response.filename}`);
                     fileItem.style.background = "green";
                 }
             } else {
-                console.log("Server response: ", xhr.statusText);
+                let response = xhr.responseText;
+                console.log(response);
             }
         };
         xhr.send(_data);
@@ -47,10 +48,10 @@ function ItemsTurnSend({className, files, serverURL}) {
     }
 
     return (
-        <div className={className}>
+        <div className="ItemsTurnSend">
             <div className="FilesTitle">Файлы</div>
             <div className="FilesBox" dangerouslySetInnerHTML={{__html: filesHTML}}></div>
-            <div className="SendButton" onClick={sendFiles}>Отправить</div>
+            <div className="Buttons" onClick={sendFiles}>Отправить</div>
         </div>
     );
 }

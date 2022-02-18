@@ -13,7 +13,7 @@
 }
 
 .DragSpace{
-    padding: 100px;
+    padding: 5%;
     display: flex;
     width: 76%;
     height: 100%;
@@ -39,4 +39,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.Buttons{
+    background: cadetblue;
+    border: 10px solid darkslateblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 22px;
 }

@@ -13,23 +13,15 @@
     padding: 10px;
     font-size: 22px;
 }
-.SendButton{
+.ItemSendButton{
     background:darkgoldenrod;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
 }
-.ItemsTurnSend{
-    flex-direction: column;
-    display: flex;
-    padding: 5px;
-    width: 22%;
-    height: 100%;
-    font-size: 30px;
-    background: darkcyan;
-}
 .FilesBox{
+    overflow-y: auto;
     display: flex;
     height: 100%;
     width: 100%;
@@ -43,4 +35,15 @@
     display: block;
     width: 100%;
 }
+
+.ItemsTurnSend{
+    flex-direction: column;
+    display: flex;
+    padding: 5px;
+    width: 18%;
+    height: 100%;
+    font-size: 30px;
+    background: darkcyan;
+}
+
 

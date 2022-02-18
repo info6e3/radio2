@@ -1,10 +1,11 @@
 import {useState} from 'react';
 import './styles/App.css';
 import ItemsTurnSend from "./components/ItemsTurnSend";
+import CurrentPlaylist from "./components/CurrentPlaylist";
 
 
 function App() {
-  const serverURL = "http://5.181.109.24:5000/music-download";
+  const downloadMusicURL = "http://5.181.109.24:5000/music-download";
   let [files, setFiles] = useState([]);
   let [drag, setDrag] = useState(false);
 
@@ -27,6 +28,7 @@ function App() {
 
   return (
     <div className="App">
+      <CurrentPlaylist/>
       <div className="DragSpace">
       {drag
           ? <div
@@ -45,8 +47,7 @@ function App() {
 
       }
       </div>
-
-      <ItemsTurnSend className="ItemsTurnSend" files={files} serverURL={serverURL}/>
+      <ItemsTurnSend files={files} serverURL={downloadMusicURL}/>
     </div>
   );
 }
