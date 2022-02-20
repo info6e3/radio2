@@ -1,49 +1,47 @@
-.FileItem{
+.ItemsTurnSend{
+    flex-direction: column;
+    display: flex;
+    width: 18%;
+    height: 100%;
+    font-size: 30px;
+    background: darkcyan;
+}
+.ItemsTurnSend-FileItem{
     flex-direction: column;
     border: 1px solid black;
     margin-bottom: 10px;
 }
-.FileStatusBar{
+.ItemsTurnSend-FileStatusBar{
     width: 100%;
     height: 10px;
     background: red;
 }
-.FileName{
+.ItemsTurnSend-FileName{
     word-wrap: break-word;
     padding: 10px;
     font-size: 22px;
 }
-.ItemSendButton{
+.ItemsTurnSend-Button{
+    cursor: pointer;
     background:darkgoldenrod;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
 }
-.FilesBox{
+.ItemsTurnSend-FilesBox{
     overflow-y: auto;
     display: flex;
     height: 100%;
-    width: 100%;
     background: cornsilk;
     flex-direction: column;
     padding: 10px;
 }
-.FilesTitle{
+.ItemsTurnSend-FilesTitle{
     margin-bottom: 10px;
     text-align: center;
     display: block;
     width: 100%;
-}
-
-.ItemsTurnSend{
-    flex-direction: column;
-    display: flex;
-    padding: 5px;
-    width: 18%;
-    height: 100%;
-    font-size: 30px;
-    background: darkcyan;
 }
 
 

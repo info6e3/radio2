@@ -1,10 +1,10 @@
 import {useState} from 'react';
-import './styles/App.css';
+import './styles/RadioAdmin.css';
 import ItemsTurnSend from "./components/ItemsTurnSend";
 import CurrentPlaylist from "./components/CurrentPlaylist";
 
 
-function App() {
+function RadioAdmin() {
   const downloadMusicURL = "http://5.181.109.24:5000/music-download";
   let [files, setFiles] = useState([]);
   let [drag, setDrag] = useState(false);
@@ -27,19 +27,19 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="RadioAdmin">
       <CurrentPlaylist/>
-      <div className="DragSpace">
+      <div className="RadioAdmin-DragSpace">
       {drag
           ? <div
-              className='drop-area'
+              className='RadioAdmin-drop-area'
               onDragStart = {e => dragStartHandler(e)}
               onDragLeave = {e => dragLeaveHandler(e)}
               onDragOver = {e => dragStartHandler(e)}
               onDrop = {e => onDropHandler(e)}
             >Отпустите файлы для загрузки</div>
           : <div
-              className='drop-area-false'
+              className='RadioAdmin-drop-area-false'
               onDragStart = {e => dragStartHandler(e)}
               onDragLeave = {e => dragLeaveHandler(e)}
               onDragOver = {e => dragStartHandler(e)}
@@ -47,9 +47,9 @@ function App() {
 
       }
       </div>
-      <ItemsTurnSend files={files} serverURL={downloadMusicURL}/>
+      <ItemsTurnSend files={files}/>
     </div>
   );
 }
 
-export default App;
+export default RadioAdmin;

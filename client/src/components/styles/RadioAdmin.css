@@ -1,29 +1,23 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-.App{
-    padding: 10px;
+.RadioAdmin{
     width: 100vw;
     height: 100vh;
+    padding: 10px;
     display: inline-flex;
-    justify-content: space-between;
 }
 
-.DragSpace{
-    padding: 5%;
+.RadioAdmin-DragSpace{
+    padding: 20px;
     display: flex;
-    width: 76%;
+    width: 50%;
     height: 100%;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 30px;
+    word-wrap: break-word;
     background: rosybrown;
 }
 
-.drop-area{
+.RadioAdmin-drop-area{
     width: 100%;
     height: 100%;
     border: 5px dashed black;
@@ -32,21 +26,11 @@
     justify-content: center;
 }
 
-.drop-area-false{
+.RadioAdmin-drop-area-false{
     width: 100%;
     height: 100%;
     border: 5px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.Buttons{
-    background: cadetblue;
-    border: 10px solid darkslateblue;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 22px;
 }

@@ -1,0 +1,33 @@
+.Radio{
+    padding: 6px;
+    background: darkcyan;
+}
+.Buttons{
+    text-align: center;
+}
+.ButtonMute{
+    border-radius: 25px;
+    width: 100px;
+    height: 40px;
+    display: inline-block;
+    background: crimson;
+    border: solid black 1px;
+    margin: 5px 6px;
+}
+
+.ProgressBarContainer{
+    background: bisque;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.ProgressBar{
+    height: 20px;
+    width: 0%;
+    background: gray;
+}
+.Title{
+    text-align: center;
+    font-size: 25px;
+    padding: 10px;
+    background: whitesmoke;
+}

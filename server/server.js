@@ -6,16 +6,22 @@ const events = require('events');
 
 const IP = require('./config.js').IP;
 const PORT = require('./config.js').PORT;
-const serverAddress = "http://" + IP + ":" + PORT;
+let PROXYIP = require('./config.js').PROXYIP;
+let PROXYPORT = require('./config.js').PROXYPORT;
 
+let serverAddress = `https://` + PROXYIP + ":" + PROXYPORT;
+if(!PROXYIP) {
+    PROXYIP = IP;
+    PROXYPORT = PORT;
+    serverAddress = `http://` + IP + ":" + PORT;
+}
 const emitter = new events.EventEmitter();
-
-let musicID = require('./musicID.js')
-
-
+console.log("Внешний адрес: " + serverAddress);
+let musicID = require('./musicID.js') //Текущий айди загружаемой музыки.
 const app = express();
-app.use(fileUpload({ }));
-
+app.use(fileUpload({})); //Для загрузки файлов на сервер.
+app.use(express.json());
+//Заголовки для запросов.
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Origin', ['*']);
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -23,119 +29,103 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.json());
-
-let musicTurn = [];
-let currentTime = 0;
+let musicTurn = []; //Текущий плейлист.
+let currentTime = 0; //Текущее время
 let timer;
 
-/*
-app.get('/', (req,res) => {
-    //res.redirect('http://5.181.109.24')
-    //res.status(200).json({url: 'http://diana.one'});
-    res.send( 'http://diana.one');
-})
+app.listen(PORT, () => console.log(`Сервер работает на ${PORT}`));
 
-app.post('/', (req, res) => {
-    //res.status(200).json({message: 'something'});
-    //res.redirect('http://5.181.109.24')
-    //res.status(200).json({url: 'http://diana.one'});
-    res.send( 'http://diana.one');
-
-})
- */
-
+//Получение файлов из папки music.
 app.get('/music/*', (req,res) => {
     let _url = req.url;
     _url.replace('\\', '/');
     res.sendfile('.' + req.url);
-
 })
+//Запрос на получение плейлиста и всей музыки на сервере.
+app.get('/music-all-get', sendAllMusic)
+//Запрос на изменение текущего плейлиста.
+app.post('/music-send-turn', changePlaylist)
+//Запрос на получение текущего трека.
+app.post('/music-get', sendCurrentTrack)
+//Запрос на загрузку трека.
+app.post('/music-download', uploadFile)
 
-app.get('/music-all-get', (req,res) => {
+//Функции.
+
+async function sendAllMusic(req, res){
+    //Получение текущего плейлиста.
     let musicAll = [];
+    let musicTurnWithoutZero = [...musicTurn];
+    musicTurnWithoutZero.shift();
+    musicAll.push(musicTurnWithoutZero);
 
-    musicAll.push(musicTurn);
-
-    let fileContent = fs.readFileSync("music.json", "utf8");
+    //Обработка файла с музыкой на сервере.
     let musicOnServer = [];
+    let fileContent = fs.readFileSync("music.json", "utf8");
     fileContent = fileContent.split("|FORSPLIT|");
     fileContent.pop();
     fileContent.forEach(music => {
         musicOnServer.push(JSON.parse(music));
     });
-
-
     musicAll.push(musicOnServer);
+
     return res.status(200).send(musicAll);
-})
+}
 
-app.post('/music-send-turn', (req, res) => {
-    console.log(req.body);
-    if(musicTurn[0])
-    {
-        const currentMusic = musicTurn[0];
-        const newMusicTurn = req.body;
-        newMusicTurn.shift(currentMusic);
-
-        musicTurn = newMusicTurn;
-    } else {
-        const newMusicTurn = req.body;
-        musicTurn = newMusicTurn;
-
-        currentTime = 0;
-        clearInterval(timer);
-        timer = setInterval(() => {
-            currentTime++;
-            if(musicTurn[0]) {
-                if (musicTurn[0].duration <= currentTime) {
-                    switchAudio();
+async function changePlaylist(req, res){
+    const newMusicTurn = req.body;
+    if(newMusicTurn[0]){
+        if(musicTurn[0])
+        {
+            const currentMusic = musicTurn[0];
+            newMusicTurn.unshift(currentMusic);
+            musicTurn = newMusicTurn;
+        } else {
+            musicTurn = newMusicTurn;
+            currentTime = 0;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                currentTime++;
+                if(musicTurn[0]) {
+                    if (musicTurn[0].duration <= currentTime) {
+                        switchAudio();
+                    }
                 }
-            }
-        }, 1000);
-
-        emitter.emit('SendMusic');
+            }, 1000);
+            emitter.emit('SendMusic');
+        }
+        return res.status(200).send({
+            message: 'In musicTurn',
+        });
+    } else {
+        return res.status(200).send({
+            message: '0 files',
+        });
     }
+}
 
-    return res.status(200).send({
-        message: 'In musicTurn',
-    });
-})
-
-
-app.post('/music-get', (req, res) => {
-    try {
-        if (musicTurn[0]) {
-            console.log(musicTurn[0]);
+async function sendCurrentTrack(req, res){
+    if (musicTurn[0]) {
+        return res.status(200).send({
+            file: musicTurn[0],
+            currentTime: currentTime
+        });
+    } else {
+        emitter.once('SendCurrentMusic', () => {
             return res.status(200).send({
                 file: musicTurn[0],
                 currentTime: currentTime
             });
-        } else {
-            emitter.once('SendMusic', () => {
-                return res.status(200).send({
-                    file: musicTurn[0],
-                    currentTime: currentTime
-                });
-            });
-        }
-    } catch (e){
-        console.log(e);
-        return res.status(400).send(e);
+        });
     }
-})
-
-app.post('/music-download', uploadFile)
-
-app.listen(PORT, () => console.log(`Сервер работает на ${PORT}`));
+}
 
 async function uploadFile(req, res) {
     try {
-        console.log(req.files);
         const file = req.files.file;
         const type = file.name.split('.').pop();
 
-        if(type == 'mp3') {
+        if(type === 'mp3') {
             let path = `./music/${file.name}`;
             if(fs.existsSync(path)) {
                 return res.status(201).send('Файл уже существует')
@@ -181,7 +171,7 @@ async function uploadFile(req, res) {
                 }, 1000);
             }
             musicTurn.push(music);
-            emitter.emit('SendMusic');
+            emitter.emit('SendCurrentMusic');
 
             console.log(`Длительность ${duration}`);
             console.log(`Файл ${file.name} добавлен в очередь`);
@@ -207,4 +197,3 @@ function switchAudio(){
         currentTime = 0;
     }
 }
-

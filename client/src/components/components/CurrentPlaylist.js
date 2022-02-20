@@ -1,11 +1,12 @@
 import React, {useState, useEffect } from 'react';
 import './styles/CurrentPlaylist.css';
+const ServerAddress = require('./config.js').ServerAddress;
 
 
 function CurrentPlaylist() {
     const xhr = new XMLHttpRequest();
-    const getMusicAllURL = "http://5.181.109.24:5000/music-all-get";
-    const sendMusicTurnURL = "http://5.181.109.24:5000/music-send-turn";
+    const getMusicAllURL = `${ServerAddress}/music-all-get`;
+    const sendMusicTurnURL = `${ServerAddress}/music-send-turn`;
 
     const [lists, setLists] = useState([
         {id:1, title: "Плейлист", items: []},
@@ -89,12 +90,12 @@ function CurrentPlaylist() {
 
     return (
         <div className="CurrentPlaylist">
-            <div className="Buttons" onClick={GetMusic}>Получить плейлист</div>
-            <div className="Lists">
+            <div className="CurrentPlaylist-Button" onClick={GetMusic}>Получить плейлист</div>
+            <div className="CurrentPlaylist-Lists">
                 {lists.map(list =>
-                    <div className="List" key={list.id}>
-                        <div className="ListTitle"  key={list.id + "-Title"}>{list.title}</div>
-                        <div className="ListBox" key={list.id + "-Box"}>
+                    <div className="CurrentPlaylist-List" key={list.id}>
+                        <div className="CurrentPlaylist-ListTitle"  key={list.id + "-Title"}>{list.title}</div>
+                        <div className="CurrentPlaylist-ListBox" key={list.id + "-Box"}>
                             {list.items.map(music =>
                                 <div key={music.id}
                                      onDragStart={(e) => dragStartHandler(e, music)}
@@ -103,16 +104,16 @@ function CurrentPlaylist() {
                                      onDragOver={(e) => dragOverHandler(e)}
                                      onDrop={(e) => dropDropHandler(e, music)}
                                      onClick={(e) => onClickHandler(e, list, music)}
-                                     className="MusicItem"
+                                     className="CurrentPlaylist-MusicItem"
                                      draggable="true">
-                                    {music.title}
+                                    <div className="CurrentPlaylist-MusicName">{music.title}</div>
                                 </div>
                             )}
                         </div>
                     </div>
                 )}
         </div>
-            <div className="Buttons" onClick={SendTurn}>Отправить плейлист</div>
+            <div className="CurrentPlaylist-Button" onClick={SendTurn}>Отправить плейлист</div>
     </div>
     );
 }

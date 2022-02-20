@@ -1,0 +1,60 @@
+.CurrentPlaylist{
+    flex-direction: column;
+    display: flex;
+    width: 40%;
+    height: 100%;
+    font-size: 20px;
+    background: darkcyan;
+}
+.CurrentPlaylist-Lists{
+    height: 100%;
+    overflow: hidden;
+    display: inline-flex;
+}
+.CurrentPlaylist-List{
+    height: 100%;
+    max-height: 100%;
+    width: 50%;
+    display: flex;
+    background: cornsilk;
+    flex-direction: column;
+    border: 1px solid black;
+}
+.CurrentPlaylist-ListTitle{
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.CurrentPlaylist-ListBox{
+    overflow-y: auto;
+    display: flex;
+    height: 100%;
+    background: cornsilk;
+    flex-direction: column;
+    padding: 10px;
+}
+.CurrentPlaylist-MusicItem{
+    background: rgba(211,211,211, 0.7);
+    padding: 5px;
+    word-wrap: break-word;
+    flex-direction: column;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.CurrentPlaylist-MusicName{
+    opacity: 1;
+}
+
+.CurrentPlaylist-Button{
+    cursor: pointer;
+    background:darkgoldenrod;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    height: 10%;
+}
